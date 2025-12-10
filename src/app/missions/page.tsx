@@ -2,7 +2,8 @@ import { db } from "@/lib/db";
 import MissionCard from "@/components/MissionCard";
 import { Rocket } from "lucide-react";
 
-export const revalidate = 60; // Revalidate every minute for development
+export const dynamic = 'force-dynamic';
+
 
 export const metadata = {
     title: "Missions - UniverseHub",

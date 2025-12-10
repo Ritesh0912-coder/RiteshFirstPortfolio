@@ -9,6 +9,8 @@ export const metadata = {
 
 import { db } from "@/lib/db";
 
+export const dynamic = 'force-dynamic';
+
 // ... imports
 
 export default async function NewsPage({
