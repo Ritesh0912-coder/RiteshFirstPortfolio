@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from 'react';
-import { useSession } from 'next-auth/react';
+import { useSession, signOut } from 'next-auth/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import Link from 'next/link';
@@ -71,6 +71,14 @@ export default function Navbar() {
                                 )} />
                             </Link>
                         ))}
+                        {session && (
+                            <button
+                                onClick={() => signOut()}
+                                className="text-xs font-bold tracking-[0.2em] transition-colors text-red-500 hover:text-red-400"
+                            >
+                                LOGOUT
+                            </button>
+                        )}
                     </div>
 
                     {/* Mobile Menu Button */}
@@ -109,6 +117,14 @@ export default function Navbar() {
                                     {pathname === item.href && <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />}
                                 </Link>
                             ))}
+                            {session && (
+                                <button
+                                    onClick={() => signOut()}
+                                    className="flex items-center justify-between px-4 py-3 rounded-xl transition-all text-red-400 hover:bg-white/5 hover:text-red-300 w-full text-left"
+                                >
+                                    <span className="text-sm font-bold tracking-wider">LOGOUT</span>
+                                </button>
+                            )}
                         </div>
                     </motion.div>
                 )}

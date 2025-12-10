@@ -111,3 +111,24 @@ export async function registerUser(formData: FormData) {
 
     return { success: true, email, message: "Registration successful" };
 }
+
+export async function updateUser(formData: FormData) {
+    const name = formData.get("name") as string;
+    const image = formData.get("image") as string;
+    const email = formData.get("email") as string;
+
+    if (!email) {
+        throw new Error("Email is required");
+    }
+
+    await db.user.update({
+        where: { email },
+        data: {
+            name,
+            image,
+        },
+    });
+
+    revalidatePath("/dashboard");
+    redirect("/dashboard");
+}

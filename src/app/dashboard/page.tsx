@@ -5,6 +5,7 @@ import { db } from "@/lib/db"; // Use the DB connection
 import GlassCard from "@/components/ui/GlassCard";
 import { User as UserIcon, Rocket, Star, Calendar, Shield, Settings, Mail } from "lucide-react";
 import { format } from "date-fns";
+import Link from "next/link";
 
 export const dynamic = 'force-dynamic';
 
@@ -69,9 +70,11 @@ export default async function UserDashboard() {
                         </div>
 
                         {/* Action Button */}
-                        <button className="px-6 py-2 rounded-full border border-white/10 hover:bg-white/10 transition-colors text-sm font-medium">
-                            Edit Profile
-                        </button>
+                        <Link href="/dashboard/edit">
+                            <button className="px-6 py-2 rounded-full border border-white/10 hover:bg-white/10 transition-colors text-sm font-medium text-white">
+                                Edit Profile
+                            </button>
+                        </Link>
                     </div>
                 </GlassCard>
             </div>
