@@ -6,6 +6,8 @@ import GlassCard from "@/components/ui/GlassCard";
 import { User as UserIcon, Rocket, Star, Calendar, Shield, Settings, Mail } from "lucide-react";
 import { format } from "date-fns";
 
+export const dynamic = 'force-dynamic';
+
 export default async function UserDashboard() {
     const session = await getServerSession(authOptions);
 
