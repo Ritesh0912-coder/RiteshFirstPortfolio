@@ -47,7 +47,7 @@ export default async function AdminMissionsPage() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {missions.map((mission) => (
+                        {missions.map((mission: any) => (
                             <TableRow key={mission.id} className="border-white/10 hover:bg-white/5">
                                 <TableCell className="font-medium text-white">{mission.name}</TableCell>
                                 <TableCell className="text-gray-400">{mission.agency || "Unknown"}</TableCell>

@@ -27,7 +27,7 @@ export default async function MissionsPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {missions.map((mission) => (
+                {missions.map((mission: any) => (
                     <MissionCard key={mission.id} mission={mission} />
                 ))}
                 {missions.length === 0 && (

@@ -39,7 +39,7 @@ export default async function AdminUsersPage() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {users.map((user) => (
+                        {users.map((user: any) => (
                             <TableRow key={user.id} className="border-white/10 hover:bg-white/5">
                                 <TableCell className="font-medium text-white flex items-center gap-2">
                                     <div className="bg-blue-600/20 p-1 rounded-full">

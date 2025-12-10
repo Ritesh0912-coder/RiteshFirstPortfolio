@@ -46,7 +46,7 @@ export default async function AdminNewsPage() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {news.map((item) => (
+                        {news.map((item: any) => (
                             <TableRow key={item.id} className="border-white/10 hover:bg-white/5">
                                 <TableCell className="font-medium text-white">{item.title}</TableCell>
                                 <TableCell className="text-gray-400">{item.source || "Unknown"}</TableCell>
