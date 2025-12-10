@@ -8,6 +8,7 @@ const nextConfig = {
             { hostname: 'images.unsplash.com' },
             { hostname: 'api.nasa.gov' },
             { hostname: 'www.nasa.gov' },
+            { hostname: 'blogs.nasa.gov' },
             { hostname: 'spacexdata.com' },
             { hostname: 'i0.wp.com' },
             { hostname: 'spacenews.com' },
