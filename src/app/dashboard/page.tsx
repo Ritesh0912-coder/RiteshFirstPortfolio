@@ -26,7 +26,25 @@ export default async function UserDashboard() {
     });
 
     if (!user) {
-        return <div className="min-h-screen flex items-center justify-center text-white">Loading profile...</div>;
+        // Self-healing: Create user if missing but session exists
+        try {
+            console.log(`User ${session.user.email} not found in DB, creating...`);
+            const newUser = await db.user.create({
+                data: {
+                    email: session.user.email,
+                    name: session.user.name || "Explorer",
+                    image: session.user.image,
+                    role: "USER"
+                }
+            });
+
+            // Re-assign user variable (we need to cast or use 'let' above, but here we can just reload or proceed with newUser)
+            // Since 'user' is const, we'll continue using newUser properties implicitly or reload page
+            redirect("/dashboard"); // Force reload to pick up the new user cleanly
+        } catch (error) {
+            console.error("Failed to auto-create user:", error);
+            return <div className="min-h-screen flex items-center justify-center text-red-400">Error creating profile. Please log out and try again.</div>;
+        }
     }
 
     return (
