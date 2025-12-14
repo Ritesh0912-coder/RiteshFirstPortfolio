@@ -17,8 +17,8 @@ import GoogleAdSense from "@/components/GoogleAdSense";
 export const revalidate = 3600; // Revalidate every hour
 
 export default async function Home() {
-  const [apodData, newsData, nextLaunchesRaw, featuredMissions, hiddenNewsIds, recentApods] = await Promise.all([
-    getAPOD(),
+  const [newsData, nextLaunchesRaw, featuredMissions, hiddenNewsIds, recentApods] = await Promise.all([
+
     getSpaceNews(12),
     getGlobalUpcomingLaunches(),
     db.mission.findMany({
@@ -56,39 +56,7 @@ export default async function Home() {
           {/* UPCOMING LAUNCHES LIST - REMOVED AS PER USER REQUEST */}
 
           {/* FEATURE STORIES / APOD - Full Width */}
-          <GlassCard className="col-span-1 md:col-span-12 relative h-full min-h-[500px] group overflow-hidden">
-            {apodData && (
-              <>
-                {apodData.media_type === "video" ? (
-                  <iframe
-                    src={`${apodData.url}?autoplay=1&mute=1&controls=0&loop=1&playlist=${apodData.url.split('/').pop()}`}
-                    className="absolute inset-0 w-full h-full object-cover pointer-events-none"
-                    allow="autoplay; encrypted-media"
-                    allowFullScreen
-                  />
-                ) : (
-                  <Image
-                    src={apodData.url}
-                    alt={apodData.title}
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
 
-                <div className="absolute bottom-0 left-0 p-8 w-full">
-                  <div className="bg-blue-600/80 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold inline-block mb-3 text-white">
-                    ASTRONOMY PICTURE OF THE DAY
-                  </div>
-                  <h3 className="text-4xl font-bold font-orbitron mb-4">{apodData.title}</h3>
-                  <p className="text-base text-gray-300 line-clamp-3 mb-6 max-w-2xl">
-                    {apodData.explanation}
-                  </p>
-                  <GlassButton className="text-sm px-8 py-3 h-auto">Read Story</GlassButton>
-                </div>
-              </>
-            )}
-          </GlassCard>
 
           <GlassCard className="col-span-1 md:col-span-12 relative min-h-[500px] overflow-hidden">
             <div className="w-full h-[500px] relative overflow-hidden">
