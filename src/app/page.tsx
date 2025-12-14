@@ -1,7 +1,8 @@
 import GlassHero from "@/components/GlassHero";
 import GlassCard from "@/components/ui/GlassCard";
 import GlassButton from "@/components/ui/GlassButton";
-import { getAPOD } from "@/lib/nasa";
+import ImageTrail from "@/components/ui/ImageTrail";
+import { getAPOD, getRecentAPODs } from "@/lib/nasa";
 import { getSpaceNews } from "@/lib/news";
 import { getGlobalUpcomingLaunches } from "@/lib/launch_service";
 import { getBlacklist } from "@/lib/actions";
@@ -11,10 +12,12 @@ import Image from "next/image";
 import { db } from "@/lib/db";
 import GoogleAdSense from "@/components/GoogleAdSense";
 
+
+
 export const revalidate = 3600; // Revalidate every hour
 
 export default async function Home() {
-  const [apodData, newsData, nextLaunchesRaw, featuredMissions, hiddenNewsIds] = await Promise.all([
+  const [apodData, newsData, nextLaunchesRaw, featuredMissions, hiddenNewsIds, recentApods] = await Promise.all([
     getAPOD(),
     getSpaceNews(12),
     getGlobalUpcomingLaunches(),
@@ -22,14 +25,22 @@ export default async function Home() {
       where: { status: "ACTIVE" },
       take: 3
     }),
-    getBlacklist("NEWS")
+    getBlacklist("NEWS"),
+    getRecentAPODs(15)
   ]);
 
-  if (newsData.results) {
-    newsData.results = newsData.results.filter((item: any) => !hiddenNewsIds.includes(`ext-${item.id}`));
+  const trailImages = recentApods && Array.isArray(recentApods)
+    ? recentApods.filter((item: any) => item.media_type === "image").map((item: any) => item.url)
+    : [];
+
+  const safeNewsData = newsData && newsData.results ? newsData : { results: [] };
+  if (safeNewsData.results) {
+    safeNewsData.results = safeNewsData.results.filter((item: any) => !hiddenNewsIds.includes(`ext-${item.id}`));
   }
 
   const nextLaunches = nextLaunchesRaw.slice(0, 3);
+
+
 
   return (
     <main className="min-h-screen bg-black text-white selection:bg-blue-500/30">
@@ -42,41 +53,10 @@ export default async function Home() {
       <section className="max-w-7xl mx-auto px-4 pb-12">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
 
-          {/* UPCOMING LAUNCHES LIST - Span 4 (Replaces News) */}
-          <GlassCard className="col-span-1 md:col-span-4 p-6 flex flex-col h-full min-h-[500px]">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="font-orbitron font-bold text-xl text-purple-300">UPCOMING LAUNCHES</h2>
-              <Link href="/launches" className="text-xs text-gray-400 hover:text-white transition-colors">VIEW ALL</Link>
-            </div>
+          {/* UPCOMING LAUNCHES LIST - REMOVED AS PER USER REQUEST */}
 
-            <div className="flex-1 space-y-4 overflow-y-auto pr-2 custom-scrollbar">
-              {nextLaunches.map((launch: any) => (
-                <div key={launch.id} className="group p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-colors border border-white/5">
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-lg bg-black/40 flex items-center justify-center shrink-0 border border-white/10">
-                      {launch.image ? (
-                        <Image src={launch.image} alt="Rocket" width={30} height={30} className="object-contain" />
-                      ) : (
-                        <Rocket className="w-6 h-6 text-purple-400" />
-                      )}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <span className="text-[10px] text-purple-400 font-mono block mb-0.5">
-                        {new Date(launch.window_start || launch.net).toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
-                      </span>
-                      <h3 className="text-sm font-bold text-gray-200 group-hover:text-white transition-colors leading-tight mb-1">
-                        {launch.name}
-                      </h3>
-                      <p className="text-[10px] text-gray-500 truncate">{launch.provider}</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </GlassCard>
-
-          {/* FEATURE STORIES / APOD - Span 8 (Expanded) */}
-          <GlassCard className="col-span-1 md:col-span-8 relative h-full min-h-[500px] group overflow-hidden">
+          {/* FEATURE STORIES / APOD - Full Width */}
+          <GlassCard className="col-span-1 md:col-span-12 relative h-full min-h-[500px] group overflow-hidden">
             {apodData && (
               <>
                 <Image
@@ -101,6 +81,26 @@ export default async function Home() {
             )}
           </GlassCard>
 
+          <GlassCard className="col-span-1 md:col-span-12 relative min-h-[500px] overflow-hidden">
+            <div className="w-full h-[500px] relative overflow-hidden">
+              <ImageTrail
+                items={trailImages.length > 0 ? trailImages : [
+                  "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop",
+                  "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?q=80&w=2072&auto=format&fit=crop",
+                  "https://images.unsplash.com/photo-1543722530-d2c3201371e7?q=80&w=2074&auto=format&fit=crop",
+                  "https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3?q=80&w=2070&auto=format&fit=crop",
+                  "https://images.unsplash.com/photo-1454789548728-85d2696cf667?q=80&w=2060&auto=format&fit=crop",
+                  "https://images.unsplash.com/photo-1614730341194-75c60740a087?q=80&w=2148&auto=format&fit=crop",
+                  "https://images.unsplash.com/photo-1614313913007-2b4ae8ce32d6?q=80&w=2074&auto=format&fit=crop",
+                  "https://images.unsplash.com/photo-1517976487492-5750f3195933?q=80&w=2070&auto=format&fit=crop"
+                ]}
+                variant={1}
+              />
+            </div>
+          </GlassCard>
+
+
+
         </div>
       </section>
 
@@ -115,46 +115,35 @@ export default async function Home() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {newsData.results.slice(0, 12).map((article: any) => (
-            <GlassCard key={article.id} className="group overflow-hidden flex flex-col h-full hover:border-cyan-500/50 hover:shadow-[0_0_20px_rgba(6,182,212,0.15)] transition-all duration-300 bg-black/40 backdrop-blur-xl border-white/10">
-              <div className="relative h-48 w-full overflow-hidden">
-                <Image
-                  src={article.image_url || "/images/placeholder-news.jpg"}
-                  alt={article.title}
-                  fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80" />
-                <span className="absolute bottom-3 left-3 text-[10px] font-bold bg-cyan-600/90 px-2 py-1 rounded text-white shadow-lg backdrop-blur-md border border-white/10">
-                  {article.news_site}
-                </span>
-              </div>
-              <div className="p-5 flex-1 flex flex-col relative">
-                {/* Decorative glow */}
-                <div className="absolute top-0 right-0 w-20 h-20 bg-blue-500/10 rounded-bl-full -mr-10 -mt-10 blur-xl pointer-events-none group-hover:bg-cyan-500/20 transition-colors" />
-
-                <div className="flex items-center gap-2 mb-3 text-[10px] text-cyan-400 font-mono tracking-wider">
-                  <Calendar className="w-3 h-3" />
-                  {new Date(article.published_at).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {safeNewsData.results.slice(0, 12).map((article: any) => (
+            <Link href={article.url} key={article.id} target="_blank" rel="noopener noreferrer" className="block h-full">
+              <GlassCard className="h-full flex flex-col group hover:border-cyan-500/50 transition-colors duration-300">
+                <div className="relative h-48 w-full overflow-hidden">
+                  <Image
+                    src={article.image_url || "/images/placeholder-news.jpg"}
+                    alt={article.title}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+                  <span className="absolute bottom-2 right-2 text-xs font-mono text-cyan-400 bg-black/60 px-2 py-1 rounded backdrop-blur-sm">
+                    {new Date(article.published_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                  </span>
                 </div>
-
-                <h3 className="text-lg font-bold text-white mb-3 leading-snug group-hover:text-cyan-300 transition-colors line-clamp-3 font-orbitron">
-                  {article.title}
-                </h3>
-
-                <p className="text-sm text-gray-400 line-clamp-3 mb-4 flex-1 font-light leading-relaxed">
-                  {article.summary}
-                </p>
-
-                <Link href={article.url} target="_blank" className="flex items-center justify-between w-full mt-auto pt-4 border-t border-white/5 group/link">
-                  <span className="text-xs font-bold text-gray-300 group-hover/link:text-white transition-colors">READ ARTICLE</span>
-                  <div className="bg-white/5 p-1.5 rounded-full group-hover/link:bg-cyan-500 group-hover/link:text-black transition-all duration-300">
-                    <ExternalLink className="w-3 h-3" />
+                <div className="p-5 flex flex-col flex-1">
+                  <h3 className="text-xl font-bold font-orbitron mb-3 text-white line-clamp-2 group-hover:text-cyan-400 transition-colors">
+                    {article.title}
+                  </h3>
+                  <p className="text-sm text-gray-400 line-clamp-3 mb-4 flex-1">
+                    {article.summary}
+                  </p>
+                  <div className="flex items-center text-xs text-cyan-500 font-mono mt-auto">
+                    READ MORE <ArrowRight className="w-3 h-3 ml-1 group-hover:translate-x-1 transition-transform" />
                   </div>
-                </Link>
-              </div>
-            </GlassCard>
+                </div>
+              </GlassCard>
+            </Link>
           ))}
         </div>
       </section>

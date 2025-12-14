@@ -38,6 +38,7 @@ export default function Footer() {
                         <Link href="/launches" className="hover:text-blue-400 transition-colors">Launches</Link>
                         <Link href="/missions" className="hover:text-blue-400 transition-colors">Missions</Link>
                         <Link href="/gallery" className="hover:text-blue-400 transition-colors">Gallery</Link>
+                        <Link href="/contact" className="hover:text-blue-400 transition-colors">Contact</Link>
                     </div>
 
                     {/* Socials */}

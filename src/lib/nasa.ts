@@ -14,6 +14,23 @@ export async function getAPOD() {
     }
 }
 
+export async function getRecentAPODs(days: number = 10) {
+    try {
+        const startDate = new Date();
+        startDate.setDate(startDate.getDate() - days);
+        const dateStr = startDate.toISOString().split('T')[0];
+
+        const res = await fetch(`${NASA_API_BASE}/planetary/apod?api_key=${API_KEY}&start_date=${dateStr}`, {
+            next: { revalidate: 3600 },
+        });
+        if (!res.ok) throw new Error("Failed to fetch recent APODs");
+        return res.json();
+    } catch (error) {
+        console.error("Recent APOD Error:", error);
+        return [];
+    }
+}
+
 export async function getNeoWS() {
     // Implementation for asteroids if needed later
     return null;

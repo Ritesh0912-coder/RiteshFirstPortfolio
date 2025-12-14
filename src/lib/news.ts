@@ -19,6 +19,6 @@ export async function getSpaceNews(limit = 10, offset = 0) {
         return data;
     } catch (error) {
         console.error("News API Error:", error);
-        return { results: [] };
+        return { results: [], count: 0, next: null, previous: null };
     }
 }
