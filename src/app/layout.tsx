@@ -13,6 +13,9 @@ const orbitron = Orbitron({ subsets: ["latin"], variable: "--font-orbitron" });
 export const metadata: Metadata = {
   title: "UniverseHub – Explore the Infinite",
   description: "Real-time space news, missions, planets, and universe updates.",
+  icons: {
+    icon: '/favicon.ico',
+  },
 };
 
 export default function RootLayout({
