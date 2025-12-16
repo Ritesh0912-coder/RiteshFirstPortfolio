@@ -2,6 +2,7 @@ import GlassCard from "./ui/GlassCard";
 import GlassButton from "./ui/GlassButton";
 import { ArrowRight } from "lucide-react";
 import Earth3D from "./Earth3D";
+import Link from "next/link";
 
 export default function GlassHero() {
     return (
@@ -27,14 +28,18 @@ export default function GlassHero() {
                     </p>
 
                     <div className="flex flex-wrap gap-4">
-                        <GlassButton className="px-6 py-2 md:px-8 md:py-3 text-base md:text-lg flex items-center gap-2 group/btn bg-blue-600/20 hover:bg-blue-600/40 border-blue-500/50">
-                            Start Journey
-                            <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
-                        </GlassButton>
+                        <Link href="/news">
+                            <GlassButton className="px-6 py-2 md:px-8 md:py-3 text-base md:text-lg flex items-center gap-2 group/btn bg-blue-600/20 hover:bg-blue-600/40 border-blue-500/50">
+                                Space News
+                                <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
+                            </GlassButton>
+                        </Link>
 
-                        <GlassButton variant="outline" className="px-6 py-2 md:px-8 md:py-3 text-base md:text-lg border-cyan-500/30 text-cyan-400 hover:text-cyan-200">
-                            Mission Control
-                        </GlassButton>
+                        <Link href="/launches">
+                            <GlassButton variant="outline" className="px-6 py-2 md:px-8 md:py-3 text-base md:text-lg border-cyan-500/30 text-cyan-400 hover:text-cyan-200">
+                                Launches
+                            </GlassButton>
+                        </Link>
                     </div>
                 </div>
 
