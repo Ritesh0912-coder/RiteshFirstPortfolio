@@ -75,6 +75,11 @@ export default function LaunchTimeline({ launches, title }: LaunchTimelineProps)
                                                     src={launch.image}
                                                     alt={launch.name}
                                                     className="w-full h-full object-cover"
+                                                    onError={(e) => {
+                                                        const target = e.currentTarget as HTMLImageElement;
+                                                        target.src = "/placeholder.png"; // fallback image in public folder
+                                                        target.onerror = null; // prevent infinite loop
+                                                    }}
                                                 />
                                             ) : (
                                                 <div className="w-full h-full flex items-center justify-center text-gray-600">

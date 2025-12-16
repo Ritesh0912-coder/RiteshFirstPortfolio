@@ -23,10 +23,23 @@ export async function getRecentAPODs(days: number = 10) {
         const res = await fetch(`${NASA_API_BASE}/planetary/apod?api_key=${API_KEY}&start_date=${dateStr}`, {
             next: { revalidate: 3600 },
         });
-        if (!res.ok) throw new Error("Failed to fetch recent APODs");
-        return res.json();
+
+        if (!res.ok) {
+            const errorText = await res.text();
+            console.error(`NASA API Error (${res.status}):`, errorText);
+
+            // If rate limited or API error, return empty array to use fallback images
+            if (res.status === 429 || res.status === 403) {
+                console.warn('NASA API rate limit reached. Using fallback images.');
+            }
+            return [];
+        }
+
+        const data = await res.json();
+        return data;
     } catch (error) {
         console.error("Recent APOD Error:", error);
+        // Return empty array to trigger fallback images in gallery
         return [];
     }
 }
