@@ -3,7 +3,7 @@ import GlassCard from "@/components/ui/GlassCard";
 import GlassButton from "@/components/ui/GlassButton";
 import ImageTrail from "@/components/ui/ImageTrail";
 import { getAPOD, getRecentAPODs } from "@/lib/nasa";
-import { getSpaceNews, getArchivedNews, syncSpaceNews } from "@/lib/news";
+import { getSpaceNews, getArchivedNews, syncSpaceNews, ensureNewsUpdate } from "@/lib/news";
 import { getGlobalUpcomingLaunches } from "@/lib/launch_service";
 import { getBlacklist } from "@/lib/actions";
 import Link from "next/link";
@@ -11,21 +11,15 @@ import { ArrowRight, Calendar, ExternalLink, Rocket, Globe } from "lucide-react"
 import Image from "next/image";
 import { db } from "@/lib/db";
 import GoogleAdSense from "@/components/GoogleAdSense";
+import NewsGridItem from "@/components/NewsGridItem";
 
 
 
 export const revalidate = 3600; // Revalidate every hour
 
 export default async function Home() {
-  // Try to get archived news first
-  // Check if we need to sync (if DB is empty OR latest news is stale > 24h)
-  const latestNews = await db.news.findFirst({ orderBy: { updatedAt: 'desc' } });
-  const isStale = !latestNews || (new Date().getTime() - new Date(latestNews.updatedAt).getTime() > 24 * 60 * 60 * 1000);
-
-  if (isStale) {
-    console.log("News is stale or empty, syncing...");
-    await syncSpaceNews();
-  }
+  // Ensure news is fresh
+  await ensureNewsUpdate();
 
   // Fetch archived news for display
   let newsData = await getArchivedNews(50);
@@ -105,34 +99,7 @@ export default async function Home() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {safeNewsData.results.slice(0, 18).map((article: any) => (
-            <Link href={article.url} key={article.id} target="_blank" rel="noopener noreferrer" className="block h-full">
-              <GlassCard className="h-full flex flex-col group hover:border-cyan-500/50 transition-colors duration-300">
-                <div className="relative h-48 w-full overflow-hidden">
-                  <Image
-                    src={article.image_url || "/images/placeholder-news.jpg"}
-                    alt={article.title}
-                    fill
-                    unoptimized
-                    className="object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
-                  <span className="absolute bottom-2 right-2 text-xs font-mono text-cyan-400 bg-black/60 px-2 py-1 rounded backdrop-blur-sm">
-                    {new Date(article.published_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
-                  </span>
-                </div>
-                <div className="p-5 flex flex-col flex-1">
-                  <h3 className="text-xl font-bold font-orbitron mb-3 text-white line-clamp-2 group-hover:text-cyan-400 transition-colors">
-                    {article.title}
-                  </h3>
-                  <p className="text-sm text-gray-400 line-clamp-3 mb-4 flex-1">
-                    {article.summary}
-                  </p>
-                  <div className="flex items-center text-xs text-cyan-500 font-mono mt-auto">
-                    READ MORE <ArrowRight className="w-3 h-3 ml-1 group-hover:translate-x-1 transition-transform" />
-                  </div>
-                </div>
-              </GlassCard>
-            </Link>
+            <NewsGridItem key={article.id} article={article} />
           ))}
         </div>
       </section>

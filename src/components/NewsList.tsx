@@ -2,21 +2,16 @@
 
 import { useState } from "react";
 import useSWRInfinite from "swr/infinite";
-import { getSpaceNews } from "@/lib/news";
 import NewsCard from "@/components/NewsCard";
 import { Loader2 } from "lucide-react";
 
-const fetcher = (url: string) => {
-    const params = new URLSearchParams(url.split('?')[1]);
-    const limit = parseInt(params.get('limit') || '10');
-    const offset = parseInt(params.get('offset') || '0');
-    return getSpaceNews(limit, offset);
-};
+// Fetch from our own API which merges sources
+const fetcher = (url: string) => fetch(url).then(res => res.json());
 
 export default function NewsList() {
     const getKey = (pageIndex: number, previousPageData: any) => {
         if (previousPageData && !previousPageData.results.length) return null; // reached the end
-        return `/news?limit=10&offset=${pageIndex * 10}`;
+        return `/api/news?limit=10&offset=${pageIndex * 10}`;
     };
 
     const { data, size, setSize, isValidating } = useSWRInfinite(getKey, fetcher);

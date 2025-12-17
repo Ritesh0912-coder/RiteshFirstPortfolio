@@ -1,6 +1,6 @@
 import NewsFilter from "@/components/NewsFilter";
 import NewsCard from "@/components/NewsCard";
-import { getSpaceNews } from "@/lib/news";
+import { getSpaceNews, ensureNewsUpdate } from "@/lib/news";
 
 export const metadata = {
     title: "UniverseHub News - Global Space Updates",
@@ -18,6 +18,9 @@ export default async function NewsPage({
 }: {
     searchParams: { q?: string; category?: string };
 }) {
+    // 0. Ensure News is Fresh
+    await ensureNewsUpdate();
+
     // 1. Fetch Local News
     const dbNews = await db.news.findMany({
         orderBy: { publishedAt: "desc" },

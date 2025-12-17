@@ -4,6 +4,7 @@ import { useState } from "react";
 import SpotlightCard from "./SpotlightCard";
 import { Calendar } from "lucide-react";
 import { format } from "date-fns";
+import { getRandomSpaceImage, getValidImageUrl } from "@/lib/utils";
 
 interface NewsCardProps {
     news: {
@@ -18,17 +19,32 @@ interface NewsCardProps {
 }
 
 export default function NewsCard({ news }: NewsCardProps) {
-    const [imgSrc, setImgSrc] = useState(news.imageUrl);
+    // Validate incoming URL against blacklist
+    const initialImage = getValidImageUrl(news.imageUrl) ? news.imageUrl : getRandomSpaceImage();
+    const [imgSrc, setImgSrc] = useState(initialImage);
+    const [retryCount, setRetryCount] = useState(0);
 
     const date = news.publishedAt instanceof Date ? news.publishedAt : new Date(news.publishedAt);
+
+    const handleError = () => {
+        if (retryCount === 0) {
+            // First retry: Random space image
+            setImgSrc(getRandomSpaceImage());
+            setRetryCount(1);
+        } else if (retryCount === 1) {
+            // Final fallback: Local asset
+            setImgSrc("/images/rocket-placeholder.svg");
+            setRetryCount(2);
+        }
+    }
 
     return (
         <SpotlightCard className="h-full flex flex-col group p-0 border-white/10 bg-space-light/50 backdrop-blur-md">
             <div className="relative h-48 overflow-hidden w-full flex-shrink-0">
                 <img
-                    src={imgSrc || "/images/news-placeholder.jpg"}
+                    src={imgSrc || getRandomSpaceImage()}
                     alt={news.title}
-                    onError={() => setImgSrc("https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop")}
+                    onError={handleError}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-space-black/80 to-transparent" />
@@ -50,7 +66,7 @@ export default function NewsCard({ news }: NewsCardProps) {
                 <div className="flex items-center justify-between text-xs text-gray-500 mt-auto pt-4 border-t border-white/5 w-full">
                     <div className="flex items-center gap-1">
                         <Calendar className="w-3 h-3" />
-                        {format(date, "MMM d, yyyy")}
+                        {tryFormatDate(date)}
                     </div>
                     <a
                         href={news.url}
@@ -64,4 +80,12 @@ export default function NewsCard({ news }: NewsCardProps) {
             </div>
         </SpotlightCard>
     );
+}
+
+function tryFormatDate(date: Date) {
+    try {
+        return format(date, "MMM d, yyyy");
+    } catch (e) {
+        return "Recent";
+    }
 }
