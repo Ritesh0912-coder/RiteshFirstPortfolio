@@ -1,3 +1,4 @@
+"use client";
 import { Suspense, useState, useEffect } from "react";
 import { ArrowLeft, Loader2, Search } from "lucide-react";
 import Link from "next/link";
