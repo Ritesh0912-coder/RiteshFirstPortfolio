@@ -69,10 +69,10 @@ export default async function Home() {
                 items={trailImages.length > 0 ? trailImages : [
                   "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop",
                   "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?q=80&w=2072&auto=format&fit=crop",
-                  "https://images.unsplash.com/photo-1543722530-d2c3201371e7?q=80&w=2074&auto=format&fit=crop",
+                  "https://images.unsplash.com/photo-1502134249126-9f3755a50d78?q=80&w=2074&auto=format&fit=crop",
                   "https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3?q=80&w=2070&auto=format&fit=crop",
-                  "https://images.unsplash.com/photo-1454789548728-85d2696cf667?q=80&w=2060&auto=format&fit=crop",
-                  "https://images.unsplash.com/photo-1614730341194-75c60740a087?q=80&w=2148&auto=format&fit=crop",
+                  "https://images.unsplash.com/photo-1454789548728-85d2696cfb93?q=80&w=2060&auto=format&fit=crop",
+                  "https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?q=80&w=2148&auto=format&fit=crop",
                   "https://images.unsplash.com/photo-1614313913007-2b4ae8ce32d6?q=80&w=2074&auto=format&fit=crop",
                   "https://images.unsplash.com/photo-1517976487492-5750f3195933?q=80&w=2070&auto=format&fit=crop"
                 ]}
@@ -98,8 +98,8 @@ export default async function Home() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {safeNewsData.results.slice(0, 18).map((article: any) => (
-            <NewsGridItem key={article.id} article={article} />
+          {safeNewsData.results.slice(0, 18).map((article: any, index: number) => (
+            <NewsGridItem key={article.id} article={article} index={index} />
           ))}
         </div>
       </section>

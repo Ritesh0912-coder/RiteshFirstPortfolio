@@ -10,7 +10,7 @@ NEXTAUTH_URL="http://localhost:3000"
 
 # External APIs
 # NASA API Key (Get one at https://api.nasa.gov/)
-NEXT_PUBLIC_NASA_API_KEY="DEMO_KEY"
+NEXT_PUBLIC_NASA_API_KEY=""
 
 # Node Environment
 NODE_ENV="development"

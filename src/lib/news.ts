@@ -6,22 +6,38 @@ import * as cheerio from "cheerio";
 export const NEWS_API_BASE = "https://api.spaceflightnewsapi.net/v4";
 export const GOOGLE_NEWS_RSS = "https://news.google.com/rss/search?q=space+astronomy&hl=en-US&gl=US&ceid=US:en";
 
+// Utility for fetching with retry and timeout
+async function fetchWithRetry(url: string, options: RequestInit = {}, retries = 2, timeout = 10000): Promise<Response> {
+    for (let i = 0; i <= retries; i++) {
+        const controller = new AbortController();
+        const id = setTimeout(() => controller.abort(), timeout);
+        try {
+            const response = await fetch(url, {
+                ...options,
+                signal: controller.signal,
+            });
+            clearTimeout(id);
+            if (response.ok) return response;
+            if (i === retries) return response; // Final attempt, return whatever we got
+        } catch (err: any) {
+            clearTimeout(id);
+            if (i === retries) throw err;
+            // Wait before retry
+            await new Promise(res => setTimeout(res, 1000 * (i + 1)));
+        }
+    }
+    throw new Error("Fetch failed after retries");
+}
+
 // Helper to fetch OG Image
 async function getOGImage(url: string): Promise<string | null> {
     try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 8000); // Increased to 8s
-
-        const response = await fetch(url, {
-            signal: controller.signal,
+        const response = await fetchWithRetry(url, {
             headers: {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
             }
-        });
-        clearTimeout(timeoutId);
+        }, 1, 5000); // 1 retry, 5s timeout for OG images
 
-        // ... (rest is same)
-        if (!response.ok) return null;
         const html = await response.text();
         const $ = cheerio.load(html);
         let ogImage = $('meta[property="og:image"]').attr('content');
@@ -39,16 +55,11 @@ async function getOGImage(url: string): Promise<string | null> {
 // Fetch from External API (Spaceflight News)
 export async function getSpaceNews(limit = 10, offset = 0) {
     try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 20000); // 20s timeout for better reliability
-
-        const res = await fetch(`${NEWS_API_BASE}/articles?limit=${limit}&offset=${offset}`, {
+        const res = await fetchWithRetry(`${NEWS_API_BASE}/articles?limit=${limit}&offset=${offset}`, {
             cache: 'no-store',
-            signal: controller.signal
-        });
-        clearTimeout(timeoutId);
+        }, 2, 15000); // 2 retries, 15s timeout
 
-        if (!res.ok) throw new Error("Failed to fetch news");
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
 
         // Sanitize images
@@ -58,8 +69,9 @@ export async function getSpaceNews(limit = 10, offset = 0) {
         }));
 
         return data;
-    } catch (error) {
-        console.error("News API Error:", error);
+    } catch (error: any) {
+        // Log concisely
+        console.error("News API Error:", error.message || error);
         return { results: [], count: 0, next: null, previous: null };
     }
 }

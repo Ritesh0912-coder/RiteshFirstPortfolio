@@ -3,9 +3,9 @@
 import { useState, useEffect } from 'react';
 import { useSession, signOut } from 'next-auth/react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Search } from 'lucide-react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
 const navItems = [
@@ -19,7 +19,10 @@ export default function Navbar() {
     const { data: session } = useSession();
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+    const [searchExpanded, setSearchExpanded] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
     const pathname = usePathname();
+    const router = useRouter();
 
     const isAdmin = session?.user?.email === 'admin@universe.io' || session?.user?.role === 'ADMIN';
 
@@ -31,7 +34,16 @@ export default function Navbar() {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    if (pathname?.startsWith('/admin') || pathname === '/login') return null;
+    const handleSearch = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (searchQuery.trim()) {
+            router.push(`/map?query=${encodeURIComponent(searchQuery)}`);
+            setSearchQuery('');
+            setSearchExpanded(false);
+        }
+    };
+
+    if (pathname?.startsWith('/admin') || pathname === '/login' || pathname === '/map') return null;
 
     return (
         <nav className={cn(
@@ -41,14 +53,14 @@ export default function Navbar() {
                 : "bg-black/20 backdrop-blur-lg border border-white/5 py-4 px-8"
         )}>
             <div className="px-6 md:px-8">
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between gap-8">
                     {/* Logo (Hidden on desktop if minimizing, but let's keep it minimal) */}
                     <Link href="/" className="md:hidden flex items-center gap-2 font-orbitron font-bold text-white tracking-widest">
                         UNIVERSE<span className="text-blue-500">HUB</span>
                     </Link>
 
                     {/* Desktop Navigation - Centered */}
-                    <div className="hidden md:flex items-center justify-center w-full gap-12">
+                    <div className="hidden md:flex items-center justify-center w-full gap-10">
                         {dynamicNavItems.map((item) => (
                             <Link
                                 key={item.name}
@@ -66,6 +78,33 @@ export default function Navbar() {
                             </Link>
                         ))}
 
+                        {/* Expandable Search */}
+                        <motion.form
+                            onSubmit={handleSearch}
+                            onHoverStart={() => setSearchExpanded(true)}
+                            onHoverEnd={() => !searchQuery && setSearchExpanded(false)}
+                            animate={{ width: searchExpanded ? 200 : 24 }}
+                            className="relative flex items-center overflow-hidden h-8"
+                        >
+                            <Search className={cn(
+                                "w-4 h-4 cursor-pointer transition-colors shrink-0",
+                                searchExpanded ? "text-blue-500" : "text-gray-400 group-hover:text-white"
+                            )} />
+                            <AnimatePresence>
+                                {searchExpanded && (
+                                    <motion.input
+                                        initial={{ opacity: 0, x: -10 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        exit={{ opacity: 0, x: -10 }}
+                                        placeholder="SEARCH LOCATION..."
+                                        value={searchQuery}
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                        className="bg-transparent border-none outline-none text-[10px] font-bold tracking-widest text-white placeholder:text-gray-600 ml-4 w-full"
+                                        autoFocus
+                                    />
+                                )}
+                            </AnimatePresence>
+                        </motion.form>
                     </div>
 
                     {/* Mobile Menu Button */}

@@ -6,9 +6,9 @@ import { Github, Twitter, Youtube } from "lucide-react";
 import Image from "next/image";
 
 export default function Footer() {
-    // const pathname = usePathname();
+    const pathname = usePathname();
 
-    // if (pathname === '/login') return null;
+    if (pathname === '/map') return null;
 
     return (
         <footer className="border-t border-white/5 bg-black/40 backdrop-blur-md relative z-10 mt-auto">
