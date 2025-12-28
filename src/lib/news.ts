@@ -5,6 +5,7 @@ import * as cheerio from "cheerio";
 
 export const NEWS_API_BASE = "https://api.spaceflightnewsapi.net/v4";
 export const GOOGLE_NEWS_RSS = "https://news.google.com/rss/search?q=space+astronomy&hl=en-US&gl=US&ceid=US:en";
+export const ISRO_NEWS_RSS = "https://news.google.com/rss/search?q=ISRO+space+satellite+launch&hl=en-IN&gl=IN&ceid=IN:en";
 
 // Utility for fetching with retry and timeout
 async function fetchWithRetry(url: string, options: RequestInit = {}, retries = 2, timeout = 10000): Promise<Response> {
@@ -49,6 +50,46 @@ async function getOGImage(url: string): Promise<string | null> {
         return ogImage || null;
     } catch (error) {
         return null; // Silent fail
+    }
+}
+
+// Fetch Unsplash Image based on keywords
+async function getUnsplashImage(keywords: string): Promise<string | null> {
+    const accessKey = process.env.UNSPLASH_ACCESS_KEY;
+    if (!accessKey) return null;
+
+    try {
+        // Extract relevant keywords for better image matching
+        const searchTerms = keywords.toLowerCase();
+        let query = "space";
+
+        if (searchTerms.includes("isro") || searchTerms.includes("india")) query = "rocket launch";
+        else if (searchTerms.includes("mars")) query = "mars planet";
+        else if (searchTerms.includes("moon")) query = "moon surface";
+        else if (searchTerms.includes("satellite")) query = "satellite orbit";
+        else if (searchTerms.includes("rocket") || searchTerms.includes("launch")) query = "rocket launch";
+        else if (searchTerms.includes("astronaut")) query = "astronaut space";
+        else if (searchTerms.includes("galaxy")) query = "galaxy stars";
+        else if (searchTerms.includes("nebula")) query = "nebula space";
+        else if (searchTerms.includes("earth")) query = "earth from space";
+
+        const response = await fetchWithRetry(
+            `https://api.unsplash.com/photos/random?query=${encodeURIComponent(query)}&orientation=landscape`,
+            {
+                headers: {
+                    'Authorization': `Client-ID ${accessKey}`
+                }
+            },
+            1,
+            5000
+        );
+
+        if (!response.ok) return null;
+        const data = await response.json();
+        return data.urls?.regular || null;
+    } catch (error) {
+        console.error("Unsplash API Error:", error);
+        return null;
     }
 }
 
@@ -134,6 +175,68 @@ export async function getGoogleNews() {
     }
 }
 
+// Fetch ISRO-specific News from Google News RSS
+export async function getISRONews(limit = 15) {
+    try {
+        const parser = new Parser({
+            customFields: {
+                item: [
+                    ['media:content', 'mediaContent'],
+                    ['media:thumbnail', 'mediaThumbnail'],
+                ]
+            }
+        });
+        const feed = await parser.parseURL(ISRO_NEWS_RSS);
+
+        // Process items with potential OG fetch and Unsplash images
+        const promises = feed.items.slice(0, limit).map(async (item: any) => {
+            let imageUrl: string | null = null;
+
+            // 1. Check media:content
+            if (item.mediaContent && item.mediaContent['$'] && item.mediaContent['$'].url) {
+                imageUrl = item.mediaContent['$'].url;
+            }
+            // 2. Check media:thumbnail
+            else if (item.mediaThumbnail && item.mediaThumbnail['$'] && item.mediaThumbnail['$'].url) {
+                imageUrl = item.mediaThumbnail['$'].url;
+            }
+            // 3. Regex match in content
+            else {
+                const content = item.content || item.contentSnippet || item.description || "";
+                const imgMatch = content.match(/<img[^>]+src="([^"]+)"/);
+                if (imgMatch) imageUrl = imgMatch[1];
+            }
+
+            // 4. Try Unsplash for ISRO-specific images
+            if (!imageUrl) {
+                imageUrl = await getUnsplashImage("ISRO rocket launch India");
+            }
+
+            // 5. Try OG Image
+            if (!imageUrl && item.link) {
+                imageUrl = await getOGImage(item.link);
+            }
+
+            // 6. Use compulsory fallback
+            const finalImageUrl = getCompulsoryImage(imageUrl, (item.title || "") + " ISRO India space");
+
+            return {
+                title: item.title || "ISRO News",
+                url: item.link || "",
+                image_url: finalImageUrl,
+                news_site: "ISRO News (Google)",
+                summary: item.contentSnippet || item.content || "Latest updates from ISRO and Indian space program.",
+                published_at: item.isoDate || new Date().toISOString(),
+            };
+        });
+
+        return await Promise.all(promises);
+    } catch (error) {
+        console.error("ISRO News Error:", error);
+        return [];
+    }
+}
+
 // Fetch from Database (Archive)
 export async function getArchivedNews(limit = 50) {
     try {
@@ -179,14 +282,15 @@ export async function ensureNewsUpdate() {
 export async function syncSpaceNews() {
     console.log("Syncing news...");
 
-    // Use Promise.allSettled to ensure one failure doesn't stop the other
-    const [spaceNewsResult, googleNewsData] = await Promise.all([
-        getSpaceNews(30).catch(e => ({ results: [] })),
-        getGoogleNews().catch(e => [])
+    // Fetch from all sources in parallel
+    const [spaceNewsResult, googleNewsData, isroNewsData] = await Promise.all([
+        getSpaceNews(20).catch(e => ({ results: [] })),
+        getGoogleNews().catch(e => []),
+        getISRONews(15).catch(e => [])
     ]);
 
     const spaceNewsData = (spaceNewsResult as any).results || [];
-    const allArticles = [...spaceNewsData, ...googleNewsData];
+    const allArticles = [...spaceNewsData, ...googleNewsData, ...isroNewsData];
 
     if (allArticles.length > 0) {
         for (const article of allArticles) {
