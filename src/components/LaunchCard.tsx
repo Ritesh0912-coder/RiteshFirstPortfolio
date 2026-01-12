@@ -10,18 +10,12 @@ interface LaunchCardProps {
 }
 
 const FALLBACK_IMAGES = [
-    "https://images.unsplash.com/photo-1517976487492-5750f3195933?q=80&w=2070&auto=format&fit=crop", // Falcon 9
-    "https://images.unsplash.com/photo-1516849841032-87cbac4d88f7?q=80&w=2070&auto=format&fit=crop", // Lift off
-    "https://images.unsplash.com/photo-1614728853975-69c960772552?q=80&w=2071&auto=format&fit=crop", // Moon/Space
-    "https://images.unsplash.com/photo-1457364887197-9150188c107b?q=80&w=2070&auto=format&fit=crop", // Nebula
-    "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?q=80&w=2072&auto=format&fit=crop", // Orbit
-    "https://images.unsplash.com/photo-1541185933-717852c42243?q=80&w=1000&auto=format&fit=crop", // Starship
-    "https://images.unsplash.com/photo-1460186136353-977e9d6085a1?q=80&w=2070&auto=format&fit=crop", // Space Tech
-    "https://images.unsplash.com/photo-1545153976-59997dad640d?q=80&w=2071&auto=format&fit=crop", // Aurora
-    "https://images.unsplash.com/photo-1636819488524-1f019c4e1c44?q=80&w=2070&auto=format&fit=crop", // Galaxy
-    "https://images.unsplash.com/photo-1518364538800-6bae3c2db0f2?q=80&w=2070&auto=format&fit=crop", // Satellites
-    "https://images.unsplash.com/photo-1454789548728-85d2696ddbcd?q=80&w=2070&auto=format&fit=crop", // Astronaut
-    "https://images.unsplash.com/photo-1543722530-d187f18026f5?q=80&w=2070&auto=format&fit=crop", // Deep Space
+    "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2070&auto=format&fit=crop", // Earth
+    "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?q=80&w=2072&auto=format&fit=crop", // Satellite
+    "https://images.unsplash.com/photo-1543722530-d2c3201371e7?q=80&w=2074&auto=format&fit=crop", // Nebula
+    "https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3?q=80&w=2070&auto=format&fit=crop", // Cosmos
+    "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?q=80&w=2070&auto=format&fit=crop", // Space View
+    "https://images.unsplash.com/photo-1541185933-717852c42243?q=80&w=2070&auto=format&fit=crop", // Starship
 ];
 
 function getLaunchImage(launch: any) {

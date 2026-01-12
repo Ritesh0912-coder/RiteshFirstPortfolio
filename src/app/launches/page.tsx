@@ -1,7 +1,6 @@
 import { getGlobalUpcomingLaunches, getGlobalPastLaunches } from "@/lib/launch_service";
 import LaunchTimeline from "@/components/LaunchTimeline";
 import { getBlacklist } from "@/lib/actions";
-import DecryptedText from "@/components/DecryptedText";
 import ParticleBackground from "@/components/ParticleBackground";
 
 export const dynamic = 'force-dynamic';
@@ -20,7 +19,7 @@ export default async function LaunchesPage() {
 
             <div className="text-center mb-16 relative z-10">
                 <h1 className="text-4xl md:text-6xl font-bold font-orbitron text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 mb-6 drop-shadow-2xl">
-                    <DecryptedText text="Mission Control" speed={80} maxIterations={20} revealDirection="center" />
+                    Launches Control
                 </h1>
                 <p className="text-gray-300 text-lg max-w-2xl mx-auto leading-relaxed">
                     Live telemetry and historical data from the global space network.

@@ -4,7 +4,6 @@ import { Canvas } from "@react-three/fiber";
 import { Environment, OrbitControls } from "@react-three/drei";
 import { motion } from "framer-motion";
 import PlanetModel from "./PlanetModel";
-import DecryptedText from "./DecryptedText";
 import ShinyButton from "./ShinyButton";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
@@ -34,7 +33,7 @@ export default function Hero() {
                     className="pointer-events-auto"
                 >
                     <h1 className="text-5xl md:text-7xl font-bold font-orbitron text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 mb-6 drop-shadow-2xl h-[1.2em]">
-                        <DecryptedText text="UniverseHub" speed={100} maxIterations={20} revealDirection="center" />
+                        UniverseHub
                     </h1>
                     <p className="text-xl md:text-2xl text-gray-300 mb-8 font-light tracking-wide">
                         Explore the Infinite. Real-time updates from the cosmos.
@@ -42,7 +41,7 @@ export default function Hero() {
 
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                         <ShinyButton href="/news">
-                            Explore News <ArrowRight className="w-5 h-5" />
+                            Explore News
                         </ShinyButton>
 
                         <Link

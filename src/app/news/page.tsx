@@ -41,7 +41,7 @@ export default async function NewsPage({
         imageUrl: item.imageUrl,
         source: "UniverseHub",
         publishedAt: item.publishedAt,
-        url: `/news/${item.id}`,
+        url: item.url,
         originalUrl: item.url, // Keep track of original URL for dedup
         isLocal: true
     }));

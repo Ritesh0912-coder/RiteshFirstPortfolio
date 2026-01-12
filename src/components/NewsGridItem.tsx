@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import GlassCard from "@/components/ui/GlassCard";
-import { getRandomSpaceImage, getValidImageUrl } from "@/lib/utils";
+import { getRandomSpaceImage, getValidImageUrl, getCompulsoryImage } from "@/lib/utils";
 import { motion } from "framer-motion";
 
 interface NewsArticle {
@@ -17,8 +17,8 @@ interface NewsArticle {
 }
 
 export default function NewsGridItem({ article, index = 0 }: { article: NewsArticle, index?: number }) {
-    // Validate the incoming URL immediately. If blacklisted, default to random.
-    const initialImage = getValidImageUrl(article.image_url) ? article.image_url : getRandomSpaceImage();
+    // Ensure we ALWAYS have an image
+    const initialImage = getCompulsoryImage(article.image_url, article.title + " " + article.summary);
     const [imgSrc, setImgSrc] = useState(initialImage);
     const [retryCount, setRetryCount] = useState(0);
 

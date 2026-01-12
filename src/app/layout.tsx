@@ -7,6 +7,7 @@ import StarBackground from "@/components/StarBackground";
 import Providers from "@/components/Providers";
 import GoogleAdSense from "@/components/GoogleAdSense";
 import SmoothScroll from "@/components/SmoothScroll";
+import GlobalLogo from "@/components/GlobalLogo";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const orbitron = Orbitron({ subsets: ["latin"], variable: "--font-orbitron" });
@@ -35,6 +36,7 @@ export default function RootLayout({
           {/* Stars Background */}
           <StarBackground starCount={1000} speedFactor={0.2} />
           <SmoothScroll />
+          <GlobalLogo />
           <Navbar />
           {children}
           <Footer />

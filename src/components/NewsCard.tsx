@@ -4,7 +4,7 @@ import { useState } from "react";
 import SpotlightCard from "./SpotlightCard";
 import { Calendar } from "lucide-react";
 import { format } from "date-fns";
-import { getRandomSpaceImage, getValidImageUrl } from "@/lib/utils";
+import { getRandomSpaceImage, getValidImageUrl, getCompulsoryImage } from "@/lib/utils";
 
 interface NewsCardProps {
     news: {
@@ -19,8 +19,8 @@ interface NewsCardProps {
 }
 
 export default function NewsCard({ news }: NewsCardProps) {
-    // Validate incoming URL against blacklist
-    const initialImage = getValidImageUrl(news.imageUrl) ? news.imageUrl : getRandomSpaceImage();
+    // Ensure we ALWAYS have an image, starting with the most relevant one possible
+    const initialImage = getCompulsoryImage(news.imageUrl, news.title + " " + news.summary);
     const [imgSrc, setImgSrc] = useState(initialImage);
     const [retryCount, setRetryCount] = useState(0);
 

@@ -9,6 +9,7 @@ import { getBlacklist } from "@/lib/actions";
 import Link from "next/link";
 import { db } from "@/lib/db";
 import NewsGridItem from "@/components/NewsGridItem";
+import { SPACE_PLACEHOLDERS } from "@/lib/utils";
 
 
 
@@ -21,12 +22,8 @@ export default async function Home() {
   // Fetch archived news for display
   let newsData = await getArchivedNews(50);
 
-  const [nextLaunchesRaw, featuredMissions, hiddenNewsIds, recentApods] = await Promise.all([
+  const [nextLaunchesRaw, hiddenNewsIds, recentApods] = await Promise.all([
     getGlobalUpcomingLaunches(),
-    db.mission.findMany({
-      where: { status: "ACTIVE" },
-      take: 3
-    }),
     getBlacklist("NEWS"),
     getRecentAPODs(15)
   ]);
@@ -62,16 +59,7 @@ export default async function Home() {
           <GlassCard className="col-span-1 md:col-span-12 relative min-h-[500px] overflow-hidden">
             <div className="w-full h-[500px] relative overflow-hidden">
               <ImageTrail
-                items={trailImages.length > 0 ? trailImages : [
-                  "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop",
-                  "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?q=80&w=2072&auto=format&fit=crop",
-                  "https://images.unsplash.com/photo-1502134249126-9f3755a50d78?q=80&w=2074&auto=format&fit=crop",
-                  "https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3?q=80&w=2070&auto=format&fit=crop",
-                  "https://images.unsplash.com/photo-1454789548728-85d2696cfb93?q=80&w=2060&auto=format&fit=crop",
-                  "https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?q=80&w=2148&auto=format&fit=crop",
-                  "https://images.unsplash.com/photo-1614313913007-2b4ae8ce32d6?q=80&w=2074&auto=format&fit=crop",
-                  "https://images.unsplash.com/photo-1517976487492-5750f3195933?q=80&w=2070&auto=format&fit=crop"
-                ]}
+                items={trailImages.length > 0 ? trailImages : SPACE_PLACEHOLDERS}
                 variant={1}
               />
             </div>

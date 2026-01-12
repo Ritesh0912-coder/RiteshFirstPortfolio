@@ -10,7 +10,6 @@ export default function Footer() {
     const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
     const [message, setMessage] = useState("");
 
-    if (pathname === '/map') return null;
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -70,7 +69,6 @@ export default function Footer() {
                     <div className="flex flex-wrap justify-center gap-8 text-sm font-medium text-gray-400">
                         <Link href="/news" className="hover:text-blue-400 transition-colors">News</Link>
                         <Link href="/launches" className="hover:text-blue-400 transition-colors">Launches</Link>
-                        <Link href="/missions" className="hover:text-blue-400 transition-colors">Missions</Link>
                         <Link href="/gallery" className="hover:text-blue-400 transition-colors">Gallery</Link>
                         <Link href="/contact" className="hover:text-blue-400 transition-colors">Contact</Link>
                     </div>
@@ -116,7 +114,7 @@ export default function Footer() {
 
                 {/* Bottom Bar */}
                 <div className="mt-12 pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-gray-600">
-                    <p>&copy; <span suppressHydrationWarning>{new Date().getFullYear()}</span> UniverseHub. All rights reserved. By Ritesh Shinde</p>
+                    <p>&copy; <span suppressHydrationWarning>{new Date().getFullYear()}</span> UniverseHub. All rights reserved. Made By Ritesh Shinde</p>
                     <div className="flex gap-6">
                         <Link href="/privacy" className="hover:text-gray-400 cursor-pointer transition-colors">Privacy Policy</Link>
                         <Link href="/terms" className="hover:text-gray-400 cursor-pointer transition-colors">Terms of Service</Link>

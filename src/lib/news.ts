@@ -55,7 +55,7 @@ async function getOGImage(url: string): Promise<string | null> {
 
 // Fetch Unsplash Image based on keywords
 async function getUnsplashImage(keywords: string): Promise<string | null> {
-    const accessKey = process.env.UNSPLASH_ACCESS_KEY;
+    const accessKey = process.env.NEXT_PUBLIC_UNSPLASH_ACCESS_KEY || process.env.UNSPLASH_ACCESS_KEY;
     if (!accessKey) return null;
 
     try {
@@ -66,9 +66,9 @@ async function getUnsplashImage(keywords: string): Promise<string | null> {
         if (searchTerms.includes("isro") || searchTerms.includes("india")) query = "rocket launch";
         else if (searchTerms.includes("mars")) query = "mars planet";
         else if (searchTerms.includes("moon")) query = "moon surface";
-        else if (searchTerms.includes("satellite")) query = "satellite orbit";
-        else if (searchTerms.includes("rocket") || searchTerms.includes("launch")) query = "rocket launch";
-        else if (searchTerms.includes("astronaut")) query = "astronaut space";
+        else if (searchTerms.includes("satellite")) query = "satellite orbit planet";
+        else if (searchTerms.includes("rocket") || searchTerms.includes("launch")) query = "rocket launch space";
+        else if (searchTerms.includes("astronaut") || searchTerms.includes("man") || searchTerms.includes("human")) query = "deep space nebula";
         else if (searchTerms.includes("galaxy")) query = "galaxy stars";
         else if (searchTerms.includes("nebula")) query = "nebula space";
         else if (searchTerms.includes("earth")) query = "earth from space";

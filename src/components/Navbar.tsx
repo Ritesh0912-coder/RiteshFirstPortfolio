@@ -37,13 +37,13 @@ export default function Navbar() {
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
         if (searchQuery.trim()) {
-            router.push(`/map?query=${encodeURIComponent(searchQuery)}`);
+            // router.push(`/map?query=${encodeURIComponent(searchQuery)}`);
             setSearchQuery('');
             setSearchExpanded(false);
         }
     };
 
-    if (pathname?.startsWith('/admin') || pathname === '/login' || pathname === '/map') return null;
+    if (pathname?.startsWith('/admin') || pathname === '/login') return null;
 
     return (
         <nav className={cn(
@@ -54,13 +54,30 @@ export default function Navbar() {
         )}>
             <div className="px-6 md:px-8">
                 <div className="flex items-center justify-between gap-8">
-                    {/* Logo (Hidden on desktop if minimizing, but let's keep it minimal) */}
-                    <Link href="/" className="md:hidden flex items-center gap-2 font-orbitron font-bold text-white tracking-widest">
-                        UNIVERSE<span className="text-blue-500">HUB</span>
-                    </Link>
-
-                    {/* Desktop Navigation - Centered */}
-                    <div className="hidden md:flex items-center justify-center w-full gap-10">
+                    {/* Logo - Visible ONLY if width < 940px */}
+                    <div className="logo-navbar-mobile">
+                        <style dangerouslySetInnerHTML={{
+                            __html: `
+                            @media (min-width: 941px) {
+                                .logo-navbar-mobile {
+                                    display: none !important;
+                                }
+                            }
+                            @media (max-width: 940px) {
+                                .logo-navbar-mobile {
+                                    display: flex !important;
+                                }
+                            }
+                        `}} />
+                        <Link href="/" className="flex items-center gap-2 font-orbitron font-bold text-white tracking-widest group">
+                            <img src="/favicon.ico" alt="Logo" className="w-7 h-7 object-contain" />
+                            <span className="inline-block">
+                                UNIVERSE <span className="text-blue-500 group-hover:text-cyan-400 transition-colors">HUB</span>
+                            </span>
+                        </Link>
+                    </div>
+                    {/* Desktop Navigation - Right Aligned */}
+                    <div className="hidden md:flex items-center justify-end flex-1 gap-10">
                         {dynamicNavItems.map((item) => (
                             <Link
                                 key={item.name}
@@ -79,33 +96,9 @@ export default function Navbar() {
                         ))}
 
                         {/* Expandable Search */}
-                        <motion.form
-                            onSubmit={handleSearch}
-                            onHoverStart={() => setSearchExpanded(true)}
-                            onHoverEnd={() => !searchQuery && setSearchExpanded(false)}
-                            animate={{ width: searchExpanded ? 200 : 24 }}
-                            className="relative flex items-center overflow-hidden h-8"
-                        >
-                            <Search className={cn(
-                                "w-4 h-4 cursor-pointer transition-colors shrink-0",
-                                searchExpanded ? "text-blue-500" : "text-gray-400 group-hover:text-white"
-                            )} />
-                            <AnimatePresence>
-                                {searchExpanded && (
-                                    <motion.input
-                                        initial={{ opacity: 0, x: -10 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        exit={{ opacity: 0, x: -10 }}
-                                        placeholder="SEARCH LOCATION..."
-                                        value={searchQuery}
-                                        onChange={(e) => setSearchQuery(e.target.value)}
-                                        className="bg-transparent border-none outline-none text-[10px] font-bold tracking-widest text-white placeholder:text-gray-600 ml-4 w-full"
-                                        autoFocus
-                                    />
-                                )}
-                            </AnimatePresence>
-                        </motion.form>
+
                     </div>
+
 
                     {/* Mobile Menu Button */}
                     <div className="md:hidden">

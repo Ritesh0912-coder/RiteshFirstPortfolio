@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ExternalLink, Calendar, Maximize2 } from "lucide-react";
+import { getCompulsoryImage } from "@/lib/utils";
 
 interface APODProps {
     data: any;
@@ -25,7 +26,14 @@ export default function APODSection({ data }: APODProps) {
                         onClick={() => setIsOpen(true)}
                     >
                         {data.media_type === "image" ? (
-                            <img src={data.hdurl || data.url} alt={data.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                            <img
+                                src={data.hdurl || data.url}
+                                alt={data.title}
+                                onError={(e) => {
+                                    e.currentTarget.src = getCompulsoryImage(null, data.title);
+                                }}
+                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                            />
                         ) : (
                             <iframe src={data.url} title={data.title} className="w-full h-full pointer-events-none" />
                         )}
@@ -73,7 +81,14 @@ export default function APODSection({ data }: APODProps) {
                             {/* Media Section */}
                             <div className="w-full md:w-3/5 bg-black flex items-center justify-center relative min-h-[300px] md:min-h-full">
                                 {data.media_type === "image" ? (
-                                    <img src={data.hdurl || data.url} alt={data.title} className="max-w-full max-h-full object-contain" />
+                                    <img
+                                        src={data.hdurl || data.url}
+                                        alt={data.title}
+                                        onError={(e) => {
+                                            e.currentTarget.src = getCompulsoryImage(null, data.title);
+                                        }}
+                                        className="max-w-full max-h-full object-contain"
+                                    />
                                 ) : (
                                     <iframe src={data.url} title={data.title} className="w-full h-full aspect-video" allowFullScreen />
                                 )}

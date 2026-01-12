@@ -66,6 +66,29 @@ export async function getRecentAPODs(days: number = 10) {
     }
 }
 
+export async function getRandomAPODs(count: number = 10) {
+    try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000);
+
+        const res = await fetch(`${NASA_API_BASE}/planetary/apod?api_key=${API_KEY}&count=${count}`, {
+            next: { revalidate: 3600 },
+            signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+
+        if (!res.ok) {
+            console.error(`NASA Random API Error (${res.status})`);
+            return [];
+        }
+
+        return res.json();
+    } catch (error) {
+        console.error("Random APOD Error:", error);
+        return [];
+    }
+}
+
 export async function getNeoWS() {
     // Implementation for asteroids if needed later
     return null;

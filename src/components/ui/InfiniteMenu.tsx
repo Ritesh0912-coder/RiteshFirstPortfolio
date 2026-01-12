@@ -2,7 +2,6 @@
 
 import { FC, useRef, useState, useEffect, MutableRefObject } from 'react';
 import { mat4, quat, vec2, vec3 } from 'gl-matrix';
-import { X, ExternalLink, Maximize2 } from 'lucide-react';
 
 const discVertShaderSource = `#version 300 es
 
@@ -1064,8 +1063,7 @@ interface InfiniteMenuProps {
 const InfiniteMenu: FC<InfiniteMenuProps> = ({ items = [] }) => {
     const canvasRef = useRef<HTMLCanvasElement | null>(null) as MutableRefObject<HTMLCanvasElement | null>;
     const [activeItem, setActiveItem] = useState<MenuItem | null>(null);
-    const [isMoving, setIsMoving] = useState<boolean>(false);
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [, setIsMoving] = useState<boolean>(false);
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -1097,71 +1095,13 @@ const InfiniteMenu: FC<InfiniteMenuProps> = ({ items = [] }) => {
         };
     }, [items]);
 
-    const handleCanvasClick = () => {
-        if (activeItem) {
-            setIsModalOpen(true);
-        }
-    };
-
     return (
         <div className="relative w-full h-full">
             <canvas
                 id="infinite-grid-menu-canvas"
                 ref={canvasRef}
                 className="cursor-pointer w-full h-full overflow-hidden relative outline-none active:cursor-grabbing"
-                onClick={handleCanvasClick}
             />
-
-            {/* Detail Modal */}
-            {isModalOpen && activeItem && (
-                <div
-                    className="absolute inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md transition-opacity duration-300"
-                    onClick={() => setIsModalOpen(false)}
-                >
-                    <div
-                        className="relative max-w-3xl w-full bg-[#050505] border border-white/10 rounded-2xl p-8 md:p-12 shadow-[0_0_50px_rgba(0,0,0,0.8)] overflow-hidden"
-                        onClick={e => e.stopPropagation()}
-                    >
-                        {/* Background Glow */}
-                        <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
-
-                        <button
-                            onClick={() => setIsModalOpen(false)}
-                            className="absolute top-4 right-4 p-2 text-white/50 hover:text-white transition-colors rounded-full hover:bg-white/10"
-                        >
-                            <X size={24} />
-                        </button>
-
-                        <div className="relative z-10">
-                            <span className="inline-block px-3 py-1 mb-6 text-xs font-mono text-cyan-400 border border-cyan-500/30 rounded-full bg-cyan-900/10">
-                                MISSION INTEL
-                            </span>
-
-                            <h2 className="text-3xl md:text-5xl font-bold font-orbitron text-white mb-6 leading-tight">
-                                {activeItem.title}
-                            </h2>
-
-                            <p className="text-lg text-gray-300 leading-relaxed mb-10 font-light max-h-[40vh] overflow-y-auto pr-4 custom-scrollbar">
-                                {activeItem.description}
-                            </p>
-
-                            <div className="flex flex-wrap gap-4">
-                                {activeItem.link && (
-                                    <a
-                                        href={activeItem.link}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="flex items-center gap-2 px-6 py-3 bg-white text-black hover:bg-gray-200 rounded-lg font-bold text-sm transition-all transform hover:-translate-y-0.5"
-                                    >
-                                        <Maximize2 size={18} />
-                                        View Full Source
-                                    </a>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
         </div>
     );
 };
