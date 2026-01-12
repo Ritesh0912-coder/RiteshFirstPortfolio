@@ -3,6 +3,7 @@ import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import { updateUser } from "@/lib/actions";
+import Image from "next/image";
 import GlassCard from "@/components/ui/GlassCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -70,7 +71,7 @@ export default async function EditProfilePage() {
                         <div className="absolute -inset-2 rounded-full bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 opacity-40 blur-lg" />
                         <div className="relative w-24 h-24 rounded-full overflow-hidden border-4 border-slate-800/80 shadow-2xl bg-black/50">
                             {user.image ? (
-                                <img src={user.image} alt={user.name || "User"} className="w-full h-full object-cover" />
+                                <Image src={user.image} alt={user.name || "User"} fill className="object-cover" />
                             ) : (
                                 <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-cyan-600 via-blue-600 to-purple-600">
                                     <span className="text-3xl font-bold text-white">{user.name?.[0] || "U"}</span>

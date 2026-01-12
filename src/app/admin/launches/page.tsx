@@ -8,6 +8,7 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { getGlobalUpcomingLaunches } from "@/lib/launch_service";
+import Image from "next/image";
 import { format } from "date-fns";
 import { ExternalLink, Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -49,10 +50,11 @@ export default async function AdminLaunchesPage() {
                                     <TableCell>
                                         <div className="relative w-12 h-12 rounded overflow-hidden bg-gray-800">
                                             {launch.image ? (
-                                                <img
+                                                <Image
                                                     src={launch.image}
                                                     alt={launch.rocket}
-                                                    className="w-full h-full object-cover"
+                                                    fill
+                                                    className="object-cover"
                                                 />
                                             ) : (
                                                 <div className="flex items-center justify-center w-full h-full text-[8px] text-gray-500">

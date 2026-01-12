@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import { format } from "date-fns";
 import { Clock, MapPin, Rocket, Calendar } from "lucide-react";
 import SpotlightCard from "./SpotlightCard";
+import Image from "next/image";
+import { useState } from "react";
 
 interface LaunchCardProps {
     launch: any;
@@ -46,6 +48,8 @@ function getLaunchImage(launch: any) {
 }
 
 export default function LaunchCard({ launch }: LaunchCardProps) {
+    const [imgSrc, setImgSrc] = useState(launch.image || getLaunchImage(launch));
+
     // Determine Date
     let launchDate = new Date();
     if (launch.net) {
@@ -74,21 +78,17 @@ export default function LaunchCard({ launch }: LaunchCardProps) {
     const rocketName = typeof launch.rocket === 'string' ? launch.rocket : launch.rocket?.name || "Rocket";
     const padName = typeof launch.pad === 'string' ? launch.pad : (launch.launchpad?.name || launch.pad?.name || "Launchpad");
     const details = launch.mission || launch.details || `Launch mission for ${rocketName}.`;
-    const imageUrl = launch.image || getLaunchImage(launch);
 
     return (
         <SpotlightCard className="h-full flex flex-col group p-0 border-white/10 bg-space-light/50 backdrop-blur-md overflow-hidden">
             {/* Top Image Section */}
             <div className="relative h-48 w-full flex-shrink-0 overflow-hidden">
-                <img
-                    src={imageUrl}
+                <Image
+                    src={imgSrc}
                     alt={launch.name}
+                    fill
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                    onError={(e) => {
-                        const target = e.currentTarget as HTMLImageElement;
-                        target.src = "/placeholder.png";
-                        target.onerror = null;
-                    }}
+                    onError={() => setImgSrc("/placeholder.png")}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-space-black/80 to-transparent" />
 
@@ -100,7 +100,7 @@ export default function LaunchCard({ launch }: LaunchCardProps) {
                 {/* Mission Patch if available (Floating) */}
                 {launch.links?.patch?.small && (
                     <div className="absolute bottom-[-20px] right-4 bg-black/50 p-2 rounded-full backdrop-blur-md border border-white/10 transition-transform group-hover:scale-110">
-                        <img src={launch.links.patch.small} alt="Patch" className="w-10 h-10 object-contain" />
+                        <Image src={launch.links.patch.small} alt="Patch" width={40} height={40} className="object-contain" />
                     </div>
                 )}
             </div>

@@ -7,6 +7,7 @@ import { Menu, X, Search } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import Image from 'next/image';
 
 const navItems = [
     { name: 'HOME', href: '/' },
@@ -70,7 +71,7 @@ export default function Navbar() {
                             }
                         `}} />
                         <Link href="/" className="flex items-center gap-2 font-orbitron font-bold text-white tracking-widest group">
-                            <img src="/favicon.ico" alt="Logo" className="w-7 h-7 object-contain" />
+                            <Image src="/favicon.ico" alt="Logo" width={28} height={28} className="object-contain" />
                             <span className="inline-block">
                                 UNIVERSE <span className="text-blue-500 group-hover:text-cyan-400 transition-colors">HUB</span>
                             </span>

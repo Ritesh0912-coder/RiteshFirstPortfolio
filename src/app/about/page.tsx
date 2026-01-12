@@ -272,7 +272,7 @@ export default function AboutPage() {
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-white to-cyan-500">VOYAGE</span>
                         </h2>
                         <p className="text-xl text-gray-400 font-light max-w-2xl mx-auto leading-relaxed">
-                            Become a sentinel of the stars. Harness the power of UniverseHub to track humanity's greatest journey.
+                            Become a sentinel of the stars. Harness the power of UniverseHub to track humanity&apos;s greatest journey.
                         </p>
                     </motion.div>
 

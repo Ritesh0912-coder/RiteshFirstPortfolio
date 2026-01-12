@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useEffect, useState } from 'react';
+import Image from "next/image";
 import gsap from 'gsap';
 
 function lerp(a: number, b: number, n: number): number {
@@ -1207,11 +1208,13 @@ function TrailImage({ url, index }: TrailImageProps) {
                 className="content__img-inner bg-center bg-cover w-[calc(100%+20px)] h-[calc(100%+20px)] absolute top-[-10px] left-[-10px]"
                 style={{ backgroundImage: `url(${imgSrc})` }}
             />
-            {/* Hidden img to catch errors */}
-            <img
+            {/* Hidden image to catch errors */}
+            <Image
                 src={url}
-                className="hidden"
                 alt=""
+                width={1}
+                height={1}
+                className="hidden"
                 onError={() => {
                     // If remote image fails, use a high-quality local-looking Unsplash fallback
                     setImgSrc("https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop");

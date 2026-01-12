@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import GlassCard from "@/components/ui/GlassCard";
@@ -49,9 +50,10 @@ export default function NewsGridItem({ article, index = 0 }: { article: NewsArti
             <Link href={article.url} target="_blank" rel="noopener noreferrer" className="block h-full">
                 <GlassCard className="h-full flex flex-col group hover:border-cyan-500/50 transition-colors duration-300">
                     <div className="relative h-48 w-full overflow-hidden">
-                        <img
+                        <Image
                             src={imgSrc}
                             alt={article.title}
+                            fill
                             onError={handleError}
                             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                         />

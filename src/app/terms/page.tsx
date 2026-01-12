@@ -76,7 +76,7 @@ export default function TermsOfServicePage() {
                             <h2 className="text-2xl font-bold font-orbitron text-white">4. Space Hazard Disclaimer</h2>
                         </div>
                         <p className="text-gray-300 leading-relaxed">
-                            UniverseHub provides data "as-is". While we strive for absolute accuracy, we are not liable for any decisions made based on real-time data fluctuations or atmospheric interference. Space exploration is inherently risky; browse responsibly.
+                            UniverseHub provides data &quot;as-is&quot;. While we strive for absolute accuracy, we are not liable for any decisions made based on real-time data fluctuations or atmospheric interference. Space exploration is inherently risky; browse responsibly.
                         </p>
                     </section>
 
@@ -91,7 +91,7 @@ export default function TermsOfServicePage() {
 
                 {/* Footer text */}
                 <p className="mt-12 text-center text-gray-500 text-sm italic">
-                    "United by curiosity, guided by order."
+                    &quot;United by curiosity, guided by order.&quot;
                 </p>
             </div>
         </main>

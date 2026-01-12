@@ -99,6 +99,7 @@ function RealisticEarth({
         </>
     );
 }
+RealisticEarth.displayName = "RealisticEarth";
 
 const Scene = forwardRef<any, Earth3DProps>((props, ref) => {
     const {
@@ -200,6 +201,7 @@ const Scene = forwardRef<any, Earth3DProps>((props, ref) => {
         </>
     );
 });
+Scene.displayName = "Scene";
 
 const Earth3D = forwardRef<any, Earth3DProps>(({
     interactive = false,

@@ -13,6 +13,7 @@ import { Plus, ExternalLink, Trash, Edit } from "lucide-react";
 import Link from "next/link";
 import { format } from "date-fns";
 import { getSpaceNews } from "@/lib/news";
+import Image from "next/image";
 
 export const dynamic = 'force-dynamic';
 
@@ -91,10 +92,11 @@ export default async function AdminNewsPage() {
                                     <TableCell>
                                         <div className="relative w-16 h-12 rounded overflow-hidden bg-gray-800">
                                             {item.imageUrl ? (
-                                                <img
+                                                <Image
                                                     src={item.imageUrl}
                                                     alt={item.title}
-                                                    className="w-full h-full object-cover"
+                                                    fill
+                                                    className="object-cover"
                                                 />
                                             ) : (
                                                 <div className="flex items-center justify-center w-full h-full text-xs text-gray-500">

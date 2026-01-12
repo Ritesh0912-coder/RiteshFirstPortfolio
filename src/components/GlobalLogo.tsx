@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 
 export default function GlobalLogo() {
     const pathname = usePathname();
@@ -25,7 +26,7 @@ export default function GlobalLogo() {
                 }
             `}} />
             <Link href="/" className="flex items-center gap-3 font-orbitron font-bold text-2xl text-white tracking-widest group">
-                <img src="/favicon.ico" alt="Logo" className="w-8 h-8 object-contain" />
+                <Image src="/favicon.ico" alt="Logo" width={32} height={32} className="object-contain" />
                 <span>
                     UNIVERSE<span className="text-blue-500 group-hover:text-cyan-400 transition-colors">HUB</span>
                 </span>

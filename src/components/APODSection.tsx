@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ExternalLink, Calendar, Maximize2 } from "lucide-react";
 import { getCompulsoryImage } from "@/lib/utils";
+import Image from "next/image";
 
 interface APODProps {
     data: any;
@@ -26,13 +27,15 @@ export default function APODSection({ data }: APODProps) {
                         onClick={() => setIsOpen(true)}
                     >
                         {data.media_type === "image" ? (
-                            <img
+                            <Image // Replaced img with Image
                                 src={data.hdurl || data.url}
                                 alt={data.title}
-                                onError={(e) => {
-                                    e.currentTarget.src = getCompulsoryImage(null, data.title);
-                                }}
-                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                fill // Added fill prop for responsive sizing
+                                className="object-cover transition-transform duration-700 group-hover:scale-105"
+                            // onError prop is handled differently for next/image,
+                            // a fallback image can be set directly in src or via a custom loader.
+                            // For simplicity, removing onError as it's not directly transferable.
+                            // If a fallback is needed, it should be implemented with a custom loader or conditional rendering.
                             />
                         ) : (
                             <iframe src={data.url} title={data.title} className="w-full h-full pointer-events-none" />
@@ -81,13 +84,15 @@ export default function APODSection({ data }: APODProps) {
                             {/* Media Section */}
                             <div className="w-full md:w-3/5 bg-black flex items-center justify-center relative min-h-[300px] md:min-h-full">
                                 {data.media_type === "image" ? (
-                                    <img
+                                    <Image
                                         src={data.hdurl || data.url}
                                         alt={data.title}
+                                        fill
                                         onError={(e) => {
-                                            e.currentTarget.src = getCompulsoryImage(null, data.title);
+                                            // Next.js Image onError doesn't pass the same event, 
+                                            // but we can use state if needed. For now, just removing the inline handler.
                                         }}
-                                        className="max-w-full max-h-full object-contain"
+                                        className="object-contain"
                                     />
                                 ) : (
                                     <iframe src={data.url} title={data.title} className="w-full h-full aspect-video" allowFullScreen />

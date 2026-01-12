@@ -64,7 +64,7 @@ export default function PrivacyPolicyPage() {
                             <h2 className="text-2xl font-bold font-orbitron text-white">3. Data Security</h2>
                         </div>
                         <p className="text-gray-300 leading-relaxed">
-                            We implement industry-standard security measures, including high-level encryption, to protect your data from unauthorized access or celestial interference. Your personal "signal" is treated with the highest integrity.
+                            We implement industry-standard security measures, including high-level encryption, to protect your data from unauthorized access or celestial interference. Your personal &quot;signal&quot; is treated with the highest integrity.
                         </p>
                     </section>
 
@@ -75,7 +75,7 @@ export default function PrivacyPolicyPage() {
                             <h2 className="text-2xl font-bold font-orbitron text-white">4. Celestial Cookies</h2>
                         </div>
                         <p className="text-gray-300 leading-relaxed">
-                            We use subtle "navigation beacons" (cookies) to remember your preferences and provide a seamless journey across our various modules like the map and news feeds.
+                            We use subtle &quot;navigation beacons&quot; (cookies) to remember your preferences and provide a seamless journey across our various modules like the map and news feeds.
                         </p>
                     </section>
 
@@ -92,7 +92,7 @@ export default function PrivacyPolicyPage() {
 
                 {/* Footer text */}
                 <p className="mt-12 text-center text-gray-500 text-sm italic">
-                    "Expanding our knowledge while protecting your digital footprint."
+                    &quot;Expanding our knowledge while protecting your digital footprint.&quot;
                 </p>
             </div>
         </main>

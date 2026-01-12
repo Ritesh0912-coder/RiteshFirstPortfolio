@@ -4,11 +4,25 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { format } from "date-fns";
 import { Clock, MapPin, Rocket, ChevronDown, CheckCircle, AlertTriangle } from "lucide-react";
+import Image from "next/image";
 
 
 interface LaunchTimelineProps {
     launches: any[];
     title: string;
+}
+
+function LaunchImage({ src, alt }: { src: string; alt: string }) {
+    const [imgSrc, setImgSrc] = useState(src || "/placeholder.png");
+    return (
+        <Image
+            src={imgSrc}
+            alt={alt}
+            fill
+            className="object-cover"
+            onError={() => setImgSrc("/placeholder.png")}
+        />
+    );
 }
 
 export default function LaunchTimeline({ launches, title }: LaunchTimelineProps) {
@@ -71,16 +85,7 @@ export default function LaunchTimeline({ launches, title }: LaunchTimelineProps)
                                         {/* Square Full Image */}
                                         <div className="w-full sm:w-32 sm:h-auto h-48 relative flex-shrink-0 bg-white/5">
                                             {launch.image ? (
-                                                <img
-                                                    src={launch.image}
-                                                    alt={launch.name}
-                                                    className="w-full h-full object-cover"
-                                                    onError={(e) => {
-                                                        const target = e.currentTarget as HTMLImageElement;
-                                                        target.src = "/placeholder.png"; // fallback image in public folder
-                                                        target.onerror = null; // prevent infinite loop
-                                                    }}
-                                                />
+                                                <LaunchImage src={launch.image} alt={launch.name} />
                                             ) : (
                                                 <div className="w-full h-full flex items-center justify-center text-gray-600">
                                                     <Rocket className="w-8 h-8 opacity-50" />

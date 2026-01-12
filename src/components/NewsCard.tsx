@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import SpotlightCard from "./SpotlightCard";
 import { Calendar } from "lucide-react";
 import { format } from "date-fns";
@@ -41,9 +42,10 @@ export default function NewsCard({ news }: NewsCardProps) {
     return (
         <SpotlightCard className="h-full flex flex-col group p-0 border-white/10 bg-space-light/50 backdrop-blur-md">
             <div className="relative h-48 overflow-hidden w-full flex-shrink-0">
-                <img
+                <Image
                     src={imgSrc || getRandomSpaceImage()}
                     alt={news.title}
+                    fill
                     onError={handleError}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />

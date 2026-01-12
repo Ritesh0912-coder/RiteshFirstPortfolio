@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useState } from "react";
+import Image from "next/image";
 
 export default function Footer() {
     const pathname = usePathname();
@@ -50,10 +51,12 @@ export default function Footer() {
                     <div className="flex flex-col items-center md:items-start space-y-4">
                         <div className="flex items-center gap-3 group cursor-pointer">
                             <div className="p-1.5 bg-blue-500/10 rounded-lg group-hover:bg-blue-500/20 transition-colors">
-                                <img
+                                <Image
                                     src="/favicon.ico"
                                     alt="UniverseHub Logo"
-                                    className="w-8 h-8 object-contain"
+                                    width={32}
+                                    height={32}
+                                    className="object-contain"
                                 />
                             </div>
                             <h3 className="text-2xl font-orbitron font-bold text-white tracking-widest">
@@ -61,7 +64,7 @@ export default function Footer() {
                             </h3>
                         </div>
                         <p className="text-gray-400 text-sm text-center md:text-left max-w-sm leading-relaxed">
-                            Your gateway to the cosmos. Tracking humanity's journey to the stars with real-time data from NASA & SpaceX.
+                            Your gateway to the cosmos. Tracking humanity&apos;s journey to the stars with real-time data from NASA & SpaceX.
                         </p>
                     </div>
 
